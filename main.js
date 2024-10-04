@@ -34,7 +34,7 @@ class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.ball, this.goal, this.scoreGoal, null, this);
 
     // Добавляем текст для счета
-    this.scoreText = this.add.text(10, 10, 'Голов: 0', { fontSize: '24px', fill: '#ffffff' });
+    // this.scoreText = this.add.text(10, 10, 'Голов: 0', { fontSize: '24px', fill: '#ffffff' });
 
     // Добавляем кнопку для удара
     this.shootButton = this.add.text(window.innerWidth / 2, window.innerHeight - 80, 'Удар', {
