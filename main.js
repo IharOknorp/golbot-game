@@ -56,12 +56,12 @@ class GameScene extends Phaser.Scene {
 
   update() {
     // Получаем текущую высоту камеры
-    const cameraHeight = this.cameras.main.height;
+    const cameraHeight = this.cameras.main.displayHeight;
 
     // Ограничение движения ворот с учетом высоты камеры
     if (this.goal.y < 50) {
       this.goal.setVelocityY(this.goalSpeed);
-    } else if (this.goal.y > cameraHeight - 50) {
+    } else if (this.goal.y > cameraHeight - 100) { // Немного уменьшили значение, чтобы избежать выхода за экран
       this.goal.setVelocityY(-this.goalSpeed);
     }
 
@@ -109,8 +109,8 @@ if (screen.orientation && screen.orientation.lock) {
 // Основная конфигурация игры (должна быть после определения GameScene)
 const config = {
   type: Phaser.AUTO,
-  width: window.innerWidth, // Задание ширины в зависимости от экрана
-  height: window.innerHeight, // Задание высоты в зависимости от экрана
+  width: window.innerWidth,
+  height: window.innerHeight,
   backgroundColor: '#2d2d2d',
   physics: {
     default: 'arcade',
@@ -119,31 +119,28 @@ const config = {
       debug: false
     }
   },
-  scene: [GameScene], // Используем класс GameScene
+  scene: [GameScene],
   scale: {
-    mode: Phaser.Scale.RESIZE, // Масштабирование в зависимости от размера окна
-    autoCenter: Phaser.Scale.CENTER_BOTH // Автоцентрирование сцены
+    mode: Phaser.Scale.RESIZE, // Автоматическое изменение размеров в зависимости от экрана
+    autoCenter: Phaser.Scale.CENTER_BOTH // Автоматическое центрирование игры на экране
   }
 };
 
 window.addEventListener('resize', () => {
-  // Изменяем размеры камеры и игры в соответствии с новыми размерами экрана
   game.scale.resize(window.innerWidth, window.innerHeight);
 
   // Получаем текущую сцену игры
   let currentScene = game.scene.scenes[0];
-  let cameraHeight = currentScene.cameras.main.height;
+  let cameraHeight = currentScene.cameras.main.displayHeight;
 
   // Обновляем размеры и позиции элементов в зависимости от новых размеров
   if (currentScene.goal) {
-    if (currentScene.goal.y > cameraHeight - 50) {
-      currentScene.goal.setPosition(currentScene.goal.x, cameraHeight - 50);
-    }
+    currentScene.goal.setPosition(currentScene.goal.x, Math.min(currentScene.goal.y, cameraHeight - 100));
   }
 
   // Обновляем позицию кнопки "Удар"
   if (currentScene.shootButton) {
-    currentScene.shootButton.setPosition(window.innerWidth / 2, window.innerHeight - 80);
+    currentScene.shootButton.setPosition(currentScene.cameras.main.displayWidth / 2, currentScene.cameras.main.displayHeight - 80);
   }
 
   // Обновляем позицию текста счета
