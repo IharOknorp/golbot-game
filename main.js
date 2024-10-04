@@ -55,10 +55,13 @@ class GameScene extends Phaser.Scene {
   }
 
   update() {
-    // Ограничение движения ворот, используя размеры экрана
+    // Получаем текущую высоту камеры
+    const cameraHeight = this.cameras.main.height;
+
+    // Ограничение движения ворот с учетом высоты камеры
     if (this.goal.y < 50) {
       this.goal.setVelocityY(this.goalSpeed);
-    } else if (this.goal.y > window.innerHeight - 150) {
+    } else if (this.goal.y > cameraHeight - 50) {
       this.goal.setVelocityY(-this.goalSpeed);
     }
 
@@ -116,23 +119,36 @@ const config = {
       debug: false
     }
   },
-  scene: [GameScene] // Используем класс GameScene
+  scene: [GameScene], // Используем класс GameScene
+  scale: {
+    mode: Phaser.Scale.RESIZE, // Масштабирование в зависимости от размера окна
+    autoCenter: Phaser.Scale.CENTER_BOTH // Автоцентрирование сцены
+  }
 };
 
 window.addEventListener('resize', () => {
+  // Изменяем размеры камеры и игры в соответствии с новыми размерами экрана
   game.scale.resize(window.innerWidth, window.innerHeight);
 
-  // Обновляем позицию ворот, игрока и кнопок
-  if (this.goal) {
-    this.goal.setPosition(700, Math.min(this.goal.y, window.innerHeight - 150));
+  // Получаем текущую сцену игры
+  let currentScene = game.scene.scenes[0];
+  let cameraHeight = currentScene.cameras.main.height;
+
+  // Обновляем размеры и позиции элементов в зависимости от новых размеров
+  if (currentScene.goal) {
+    if (currentScene.goal.y > cameraHeight - 50) {
+      currentScene.goal.setPosition(currentScene.goal.x, cameraHeight - 50);
+    }
   }
 
-  if (this.shootButton) {
-    this.shootButton.setPosition(window.innerWidth / 2, window.innerHeight - 80);
+  // Обновляем позицию кнопки "Удар"
+  if (currentScene.shootButton) {
+    currentScene.shootButton.setPosition(window.innerWidth / 2, window.innerHeight - 80);
   }
 
-  if (this.scoreText) {
-    this.scoreText.setPosition(10, 10);
+  // Обновляем позицию текста счета
+  if (currentScene.scoreText) {
+    currentScene.scoreText.setPosition(10, 10);
   }
 });
 
