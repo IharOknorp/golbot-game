@@ -55,13 +55,12 @@ class GameScene extends Phaser.Scene {
   }
 
   update() {
-    // Получаем текущую высоту камеры
     const cameraHeight = this.cameras.main.displayHeight;
 
-    // Ограничение движения ворот с учетом высоты камеры
+    // Ограничение движения ворот с учетом текущей высоты камеры
     if (this.goal.y < 50) {
       this.goal.setVelocityY(this.goalSpeed);
-    } else if (this.goal.y > cameraHeight - 100) { // Немного уменьшили значение, чтобы избежать выхода за экран
+    } else if (this.goal.y > cameraHeight - 100) {
       this.goal.setVelocityY(-this.goalSpeed);
     }
 
@@ -127,25 +126,40 @@ const config = {
 };
 
 window.addEventListener('resize', () => {
+  // Изменяем размеры камеры и игры в соответствии с новыми размерами экрана
   game.scale.resize(window.innerWidth, window.innerHeight);
 
   // Получаем текущую сцену игры
-  let currentScene = game.scene.scenes[0];
-  let cameraHeight = currentScene.cameras.main.displayHeight;
+  let currentScene = game.scene.getScene('GameScene');
 
-  // Обновляем размеры и позиции элементов в зависимости от новых размеров
-  if (currentScene.goal) {
-    currentScene.goal.setPosition(currentScene.goal.x, Math.min(currentScene.goal.y, cameraHeight - 100));
-  }
+  if (currentScene) {
+    let cameraHeight = currentScene.cameras.main.displayHeight;
+    let cameraWidth = currentScene.cameras.main.displayWidth;
 
-  // Обновляем позицию кнопки "Удар"
-  if (currentScene.shootButton) {
-    currentScene.shootButton.setPosition(currentScene.cameras.main.displayWidth / 2, currentScene.cameras.main.displayHeight - 80);
-  }
+    // Обновляем размеры и позиции ворот
+    if (currentScene.goal) {
+      currentScene.goal.setPosition(cameraWidth - 100, Math.min(currentScene.goal.y, cameraHeight - 100));
+    }
 
-  // Обновляем позицию текста счета
-  if (currentScene.scoreText) {
-    currentScene.scoreText.setPosition(10, 10);
+    // Обновляем позицию игрока, чтобы он не выходил за границы
+    if (currentScene.player) {
+      currentScene.player.setPosition(100, Math.min(currentScene.player.y, cameraHeight - 50));
+    }
+
+    // Обновляем позицию мяча рядом с игроком
+    if (currentScene.ball) {
+      currentScene.ball.setPosition(currentScene.player.x + 50, currentScene.player.y);
+    }
+
+    // Обновляем позицию кнопки "Удар"
+    if (currentScene.shootButton) {
+      currentScene.shootButton.setPosition(cameraWidth / 2, cameraHeight - 80);
+    }
+
+    // Обновляем позицию текста счета
+    if (currentScene.scoreText) {
+      currentScene.scoreText.setPosition(10, 10);
+    }
   }
 });
 
