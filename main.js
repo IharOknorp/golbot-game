@@ -100,8 +100,8 @@ class GameScene extends Phaser.Scene {
 // Основная конфигурация игры (должна быть после определения GameScene)
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: window.innerWidth, // Задание ширины в зависимости от экрана
+  height: window.innerHeight, // Задание высоты в зависимости от экрана
   backgroundColor: '#2d2d2d',
   physics: {
     default: 'arcade',
