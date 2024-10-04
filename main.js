@@ -96,6 +96,11 @@ class GameScene extends Phaser.Scene {
     // this.sound.play('goalSound');
   }
 }
+if (screen.orientation && screen.orientation.lock) {
+  screen.orientation.lock("landscape").catch(function (error) {
+    console.error("Ошибка при блокировке ориентации: ", error);
+  });
+}
 
 // Основная конфигурация игры (должна быть после определения GameScene)
 const config = {
