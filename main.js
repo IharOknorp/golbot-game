@@ -37,13 +37,14 @@ class GameScene extends Phaser.Scene {
     this.scoreText = this.add.text(10, 10, 'Голов: 0', { fontSize: '24px', fill: '#ffffff' });
 
     // Добавляем кнопку для удара
-    this.shootButton = this.add.text(325, 550, 'Удар', {
+    this.shootButton = this.add.text(window.innerWidth / 2, window.innerHeight - 80, 'Удар', {
       fontSize: '32px',
       fill: '#00ff00',
       backgroundColor: '#000000',
       padding: { x: 10, y: 5 },
       borderRadius: 5
     })
+      .setOrigin(0.5)
       .setInteractive()
       .on('pointerdown', () => {
         this.shootBall();
@@ -54,10 +55,10 @@ class GameScene extends Phaser.Scene {
   }
 
   update() {
-    // Автоматическое движение ворот вверх и вниз
-    if (this.goal.y < 100) {
+    // Ограничение движения ворот, используя размеры экрана
+    if (this.goal.y < 50) {
       this.goal.setVelocityY(this.goalSpeed);
-    } else if (this.goal.y > 500) { // 600 - 100
+    } else if (this.goal.y > window.innerHeight - 150) {
       this.goal.setVelocityY(-this.goalSpeed);
     }
 
@@ -117,6 +118,23 @@ const config = {
   },
   scene: [GameScene] // Используем класс GameScene
 };
+
+window.addEventListener('resize', () => {
+  game.scale.resize(window.innerWidth, window.innerHeight);
+
+  // Обновляем позицию ворот, игрока и кнопок
+  if (this.goal) {
+    this.goal.setPosition(700, Math.min(this.goal.y, window.innerHeight - 150));
+  }
+
+  if (this.shootButton) {
+    this.shootButton.setPosition(window.innerWidth / 2, window.innerHeight - 80);
+  }
+
+  if (this.scoreText) {
+    this.scoreText.setPosition(10, 10);
+  }
+});
 
 // Создаём новый экземпляр игры
 const game = new Phaser.Game(config);
