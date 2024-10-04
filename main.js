@@ -9,13 +9,9 @@ class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    // Загружаем изображения
     this.load.image('player', 'assets/player.png');
     this.load.image('ball', 'assets/ball.png');
     this.load.image('goal', 'assets/goal.png');
-    // Загрузка звуков (опционально)
-    // this.load.audio('shootSound', 'assets/shoot.mp3');
-    // this.load.audio('goalSound', 'assets/goal.mp3');
   }
 
   create() {
@@ -76,30 +72,6 @@ class GameScene extends Phaser.Scene {
       this.ballSpeed += 50;
       this.previousScore = this.score;
     }
-
-    // Дополнительная логика (например, управление игроком с клавиатуры)
-    /*
-    this.player.setVelocity(0);
-
-    if (this.cursors.left.isDown) {
-        this.player.setVelocityX(-200);
-    }
-    else if (this.cursors.right.isDown) {
-        this.player.setVelocityX(200);
-    }
-
-    if (this.cursors.up.isDown) {
-        this.player.setVelocityY(-200);
-    }
-    else if (this.cursors.down.isDown) {
-        this.player.setVelocityY(200);
-    }
-
-    // Обновление позиции мяча, если он не в движении
-    if (this.ball.body.velocity.x === 0 && this.ball.body.velocity.y === 0) {
-        this.ball.setPosition(this.player.x + 50, this.player.y);
-    }
-    */
   }
 
   shootBall() {
